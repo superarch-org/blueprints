@@ -1,0 +1,32 @@
+[package]
+name = "orz"
+type = "system"
+description = "The Superarch package manager"
+
+[source]
+git = "https://github.com/superarch-org/orz"
+
+[source.version]
+pattern = "^v([0-9]+\\.[0-9]+\\.[0-9]+)$"
+
+[dependencies]
+build = [
+  "go"
+]
+
+run = []
+
+[build]
+configure = []
+compile = [
+  "go build -o orz -ldflags='-s -w' ."
+]
+install = [
+  "mkdir -p $DESTDIR/usr/bin",
+  "cp orz $DESTDIR/usr/bin/orz",
+  "chmod +x $DESTDIR/usr/bin/orz"
+]
+
+[install]
+prefix = "/usr"
+post = []
