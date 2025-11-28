@@ -1,0 +1,52 @@
+[package]
+name = "linux"
+type = "system"
+description = "The Linux kernel"
+
+[source]
+git = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"
+
+[source.version]
+pattern = "^v([0-9]+\\.[0-9]+\\.[0-9]+)$"
+exclude = ["rc", "alpha", "beta"]
+
+[build]
+system = "make"
+
+[build.steps]
+configure = [
+  "make defconfig",
+  "# TODO: Apply superarch-specific config tweaks"
+]
+compile = [
+  "make -j$(nproc)"
+]
+install = [
+  "make modules_install INSTALL_MOD_PATH=$DESTDIR",
+  "mkdir -p $DESTDIR/boot",
+  "cp arch/x86/boot/bzImage $DESTDIR/boot/vmlinuz-linux",
+  "cp System.map $DESTDIR/boot/System.map-linux"
+]
+
+[dependencies]
+build = [
+  "gcc",
+  "make",
+  "binutils",
+  "flex",
+  "bison",
+  "bc",
+  "cpio",
+  "perl",
+  "openssl",
+  "elfutils"
+]
+
+run = []
+
+[install]
+prefix = "/usr"
+post = [
+  "mkinitcpio -p linux",
+  "bootctl update"
+]
