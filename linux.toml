@@ -12,8 +12,6 @@ exclude = ["rc", "alpha", "beta"]
 
 [build]
 system = "make"
-
-[build.steps]
 configure = [
   "make defconfig",
   "# TODO: Apply superarch-specific config tweaks"
